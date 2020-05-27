@@ -1,4 +1,6 @@
-require('dotenv').config()
+const dotfilePath = `${__dirname}/.env`
+
+require('dotenv').config({path: dotfilePath})
 var https = require('follow-redirects').https;
 var fs = require('fs');
 const EMAIL = process.env.EMAIL
@@ -77,7 +79,7 @@ const save = (text, entry_id, rv, cookie) => {
 }
 
 const getText = () => {
-  const text = fs.readFileSync('TODAY.md', 'utf8');
+  const text = fs.readFileSync(`${__dirname}/TODAY.md`, 'utf8');
   return text
 }
 

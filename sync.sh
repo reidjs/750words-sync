@@ -2,7 +2,10 @@
 # Move this file to /usr/local/bin/?
 # Set cron to run every x seconds/hours/days
 
-lastSyncFile=".last-sync"
+DIR=$1
+
+lastSyncFile="${DIR}/.last-sync"
+logFile="${DIR}/.log"
 if [ ! -f "$lastSyncFile" ]; then
   touch $lastSyncFile
 fi
@@ -13,7 +16,7 @@ lastEditTime=$(sed -n '2p' < ${lastSyncFile})
 
 TODAY=$(date +"%b %d, %Y")
 NOW=$(date)
-lastTimeWorkFileModified=$(date -r TODAY.md)
+lastTimeWorkFileModified=$(date -r ${DIR}/TODAY.md)
 
 function updateSyncFile {
   lastSyncDate=$TODAY
@@ -23,12 +26,12 @@ function updateSyncFile {
   echo "${lastEditTime}" >> "${lastSyncFile}"
 }
 
-echo "Attempting sync ${NOW}" >> .log
+echo "Attempting sync ${NOW}" >> $logFile
 
 # If work file not modified since last sync, exit
 if [ "$lastEditTime" == "$lastTimeWorkFileModified" ]; then
-  echo "No need to run sync, file not editted" >> .log
-  echo "" >> .log
+  echo "No need to run sync, file not edited" >> $logFile
+  echo "" >> $logFile
   exit 1
 fi
 
@@ -37,26 +40,32 @@ if [ -z "$lastSyncDate" ] || [ -z "$lastEditTime" ]; then
   updateSyncFile
 fi
 
-echo "Last sync date: ${lastSyncDate}" >> .log
+echo "Last sync date: ${lastSyncDate}" >> $logFile
 
-archiveFile="ARCHIVE/${TODAY}.md"
+archiveFile="${DIR}/ARCHIVE/${TODAY}.md"
 
 # copy text from working file to archive file
-cp TODAY.md "${archiveFile}"
+cp "${DIR}/TODAY.md" "${archiveFile}"
 
-echo "Archived today's work into ${archiveFile}" >> .log
+echo "Archived today's work into ${archiveFile}" >> $logFile
 
 # Sync text from working file to 750words.com
-NODEDIR=$(which node)
-$NODEDIR uploadText.js
-echo "Sync'd today's work to 750words.com" >> .log
-echo "" >> .log
+# NODEDIR=$(which node)
+NODEDIR="/usr/local/bin/node"
+$NODEDIR ${DIR}/uploadText.js
+echo "ran ${NODEDIR} ${DIR}/uploadText.js" >> $logFile
+# WARNING: this assumes the node script succeeded!
+echo "Sync'd today's work to 750words.com" >> $logFile
 
 # If current day is different the last sync date
 if [ "$lastSyncDate" != "$TODAY" ]; then
   # clears today's file
-  > TODAY.md
+  echo "Cleared today's file ${NOW}" >> $logFile
+  > "${DIR}/TODAY.md"
 fi
 
 # update last sync time/date in file
 updateSyncFile
+
+echo "" >> $logFile
+
