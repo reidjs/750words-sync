@@ -1,11 +1,11 @@
 require('dotenv').config()
 var https = require('follow-redirects').https;
-// var fs = require('fs');
+var fs = require('fs');
 const EMAIL = process.env.EMAIL
 const PASSWORD = process.env.PASSWORD
 const puppeteer = require('puppeteer');
 
-(async () => {
+const getBrowserData = async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto('https://750words.com/auth');
@@ -20,15 +20,15 @@ const puppeteer = require('puppeteer');
     const c = cookies[i]
     cookie += c.name + '=' + c.value + "; "
   }
-  const cookie2 = cookie.slice(0, -1)
+  const COOKIE = cookie.slice(0, -1)
   const entry_id_element = await page.$('#entry_id')
-  const entry_id = await page.evaluate(element => element.value, entry_id_element);
+  const ENTRY_ID = await page.evaluate(element => element.value, entry_id_element);
   const rv_element = await page.$('#entry_record_version')
-  const rv = await page.evaluate(element => element.value, rv_element);
-  const text = 'testing123'
-  save(text, entry_id, rv, cookie2)
+  const RV = await page.evaluate(element => element.value, rv_element);
   await browser.close();
-})();
+
+  return { ENTRY_ID, RV, COOKIE }
+}
 
 const save = (text, entry_id, rv, cookie) => {
   var options = {
@@ -68,10 +68,22 @@ const save = (text, entry_id, rv, cookie) => {
       console.error(error);
     });
   });
-  console.log('text', text)
+  console.log('text written to website: \n', text)
   var postData =  `entry[id]=${entry_id}&entry[num_words]=${text.split(' ').length}&entry[body]=${encodeURIComponent(text)}&v=ctrls&rv=${rv}`;
 
   req.write(postData);
 
   req.end();
 }
+
+const getText = () => {
+  const text = fs.readFileSync('TODAY.md', 'utf8');
+  return text
+}
+
+(async() => {
+  const { ENTRY_ID, RV, COOKIE } = await getBrowserData()
+  const TEXT = getText()
+  save(TEXT, ENTRY_ID, RV, COOKIE)
+})();
+
