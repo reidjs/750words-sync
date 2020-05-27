@@ -37,7 +37,7 @@ Automate archiving and uploading text to 750words.com.
 
 *if it opened in vi on mac, press `cmd+v` to paste*
 
-`* * * * * /usr/local/bin/sync.sh /path/to/750words-sync >> /path/to/optional/output/file/out.md`
+`* * * * * /usr/local/bin/sync.sh /path/to/project/directory/750words-sync "/path/to/directory/with/file/named/TODAY.md/foo/etc" >> /path/to/log/file/out.md`
 
 Write and save the crontab.
 
