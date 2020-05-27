@@ -1,3 +1,4 @@
+// Pass the readdir 
 const dotfilePath = `${__dirname}/.env`
 
 require('dotenv').config({path: dotfilePath})
@@ -79,7 +80,8 @@ const save = (text, entry_id, rv, cookie) => {
 }
 
 const getText = () => {
-  const text = fs.readFileSync(`${__dirname}/TODAY.md`, 'utf8');
+  const dir = process.argv[2] ? process.argv[2] : __dirname
+  const text = fs.readFileSync(`${dir}/TODAY.md`, 'utf8');
   return text
 }
 

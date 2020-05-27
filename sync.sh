@@ -1,8 +1,11 @@
 #!/bin/bash
-# Move this file to /usr/local/bin/?
-# Set cron to run every x seconds/hours/days
 
+# The directory of the project code and archive
 DIR="${1}"
+SECOND="${2}"
+# The directory of TODAY.md, if left blank should assign to project code directory (untested)
+# Assign READDIR (where our TODAY and ARCHIVE files go) to either the 2nd param passed in, or to default to the first param
+READDIR=${SECOND:-$DIR}
 
 lastSyncFile="${DIR}/.last-sync"
 logFile="${DIR}/.log"
@@ -17,7 +20,7 @@ lastEditTime=$(sed -n '2p' < "${lastSyncFile}")
 
 TODAY=$(date +"%b %d, %Y")
 NOW=$(date)
-lastTimeWorkFileModified=$(date -r "${DIR}/TODAY.md")
+lastTimeWorkFileModified=$(date -r "${READDIR}/TODAY.md")
 
 function updateSyncFile {
   lastSyncDate=$TODAY
@@ -43,17 +46,17 @@ fi
 
 echo "Last sync date: ${lastSyncDate}" >> "${logFile}"
 
-# archiveFile="${DIR}/ARCHIVE/${TODAY}.md"
 
 # copy text from working file to archive file
-mkdir -p "${DIR}/ARCHIVE" && cp "${DIR}/TODAY.md" "${DIR}/ARCHIVE/${TODAY}.md"
 
-echo "Archived today's work." >> "${logFile}"
+mkdir -p "${DIR}/750WORDS_ARCHIVE" && cp "${READDIR}/TODAY.md" "${DIR}/750WORDS_ARCHIVE/${TODAY}.md"
+
+echo "Archived today's work to ${DIR}" >> "${logFile}"
 
 # Sync text from working file to 750words.com
 # NODEDIR=$(which node)
 NODEDIR="/usr/local/bin/node"
-$NODEDIR "${DIR}/uploadText.js"
+$NODEDIR "${DIR}/uploadText.js" "${READDIR}"
 echo "ran '${NODEDIR}' '${DIR}/uploadText.js'" >> "${logFile}"
 # WARNING: this assumes the node script succeeded!
 echo "Sync'd today's work to 750words.com" >> "${logFile}"
@@ -62,7 +65,7 @@ echo "Sync'd today's work to 750words.com" >> "${logFile}"
 if [ "$lastSyncDate" != "$TODAY" ]; then
   # clears today's file
   echo "Cleared today's file '${NOW}'" >> "${logFile}"
-  > "${DIR}/TODAY.md"
+  > "${READDIR}/TODAY.md"
 fi
 
 # update last sync time/date in file
