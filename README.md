@@ -53,10 +53,31 @@ PASSWORD=hunter2
 
 2. Rename the file (`EMPTY.env`) to `.env`
 
+_Now let's make sure everything's working_
+
+3. Create a file named 'TODAY.md'
+
+`touch TODAY.md`
+
+4. Add some text to `TODAY.md`
+
+`echo hello > TODAY.md`
+
+5. Run the sync script in the current directory with 
+
+`./sync.sh .`
+
+Log in to 750words.com and ensure "hello" shows up on today's page.
+
 ### 4. Write!
 
-Open `TODAY.md` with your favorite text editor and start writing! Your previous day's writings will save to the `ARCHIVE/` folder named with the date they were written. `TODAY.md` will clear every day and auto archive and sync to 750words.com once per minute if edited.
+Open `TODAY.md` with your favorite text editor and start writing! Your writings will automatically save to the local `750WORDS_ARCHIVE/` folder and sync their text to 750words.com.
 
+If you set up the optional At midnight every day:
+
+1. All the text in `TODAY.md` will copy to into a file with today's date in `750WORDS_ARCHIVE/`. For example if today is January 3rd, 2021 it will create a file named `January 3, 2021.md`.
+2. All the text in `TODAY.md` will sync to the 750words.com
+3. `TODAY.md` will clear itself out
 
 ## TODO
 - Advertise
