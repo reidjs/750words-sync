@@ -1,0 +1,17 @@
+{
+  "name": "750words-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Reid Sherman @reidjs",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "follow-redirects": "^1.11.0",
+    "puppeteer": "^3.1.0"
+  }
+}
