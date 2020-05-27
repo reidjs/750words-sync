@@ -13,7 +13,11 @@ Automate archiving and uploading text to 750words.com.
 
 `cd 750words-sync`
 
-4. Enable the sync script
+4. Install npm packages
+
+`npm i`
+
+5. Enable the sync script
 
 *WARNING: if `which node` doesn't return `/usr/local/bin/node` this script will not work!*
 
