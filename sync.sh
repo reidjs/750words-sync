@@ -49,9 +49,9 @@ echo "Last sync date: ${lastSyncDate}" >> "${logFile}"
 
 # copy text from working file to archive file
 
-mkdir -p "${DIR}/750WORDS_ARCHIVE" && cp "${READDIR}/TODAY.md" "${DIR}/750WORDS_ARCHIVE/${TODAY}.md"
+mkdir -p "${READDIR}/750WORDS_ARCHIVE" && cp "${READDIR}/TODAY.md" "${READDIR}/750WORDS_ARCHIVE/${TODAY}.md"
 
-echo "Archived today's work to ${DIR}" >> "${logFile}"
+echo "Archived today's work to ${READDIR}" >> "${logFile}"
 
 # Sync text from working file to 750words.com
 # NODEDIR=$(which node)

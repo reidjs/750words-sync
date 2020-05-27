@@ -73,10 +73,10 @@ Log in to 750words.com and ensure "hello" shows up on today's page.
 
 Open `TODAY.md` with your favorite text editor and start writing! Your writings will automatically save to the local `750WORDS_ARCHIVE/` folder and sync their text to 750words.com.
 
-If you set up the optional At midnight every day:
+If you set up the optional auto-sync script, every day at midnight:
 
 1. All the text in `TODAY.md` will copy to into a file with today's date in `750WORDS_ARCHIVE/`. For example if today is January 3rd, 2021 it will create a file named `January 3, 2021.md`.
-2. All the text in `TODAY.md` will sync to the 750words.com
+2. All the text in `TODAY.md` will sync to 750words.com.
 3. `TODAY.md` will clear itself out
 
 ## TODO
