@@ -2,21 +2,22 @@
 # Move this file to /usr/local/bin/?
 # Set cron to run every x seconds/hours/days
 
-DIR=$1
+DIR="${1}"
 
 lastSyncFile="${DIR}/.last-sync"
 logFile="${DIR}/.log"
+
 if [ ! -f "$lastSyncFile" ]; then
   touch $lastSyncFile
 fi
 # Grab first line of sync record file
-lastSyncDate=$(head -n 1 ${lastSyncFile})
+lastSyncDate=$(head -n 1 "${lastSyncFile}")
 # Grab second line of sync record file
-lastEditTime=$(sed -n '2p' < ${lastSyncFile})
+lastEditTime=$(sed -n '2p' < "${lastSyncFile}")
 
 TODAY=$(date +"%b %d, %Y")
 NOW=$(date)
-lastTimeWorkFileModified=$(date -r ${DIR}/TODAY.md)
+lastTimeWorkFileModified=$(date -r "${DIR}/TODAY.md")
 
 function updateSyncFile {
   lastSyncDate=$TODAY
@@ -26,12 +27,12 @@ function updateSyncFile {
   echo "${lastEditTime}" >> "${lastSyncFile}"
 }
 
-echo "Attempting sync ${NOW}" >> $logFile
+echo "Attempting sync '${NOW}'" >> "${logFile}"
 
 # If work file not modified since last sync, exit
 if [ "$lastEditTime" == "$lastTimeWorkFileModified" ]; then
-  echo "No need to run sync, file not edited" >> $logFile
-  echo "" >> $logFile
+  echo "No need to run sync, file not edited" >> "${logFile}"
+  echo "" >> "${logFile}"
   exit 1
 fi
 
@@ -40,32 +41,32 @@ if [ -z "$lastSyncDate" ] || [ -z "$lastEditTime" ]; then
   updateSyncFile
 fi
 
-echo "Last sync date: ${lastSyncDate}" >> $logFile
+echo "Last sync date: ${lastSyncDate}" >> "${logFile}"
 
-archiveFile="${DIR}/ARCHIVE/${TODAY}.md"
+# archiveFile="${DIR}/ARCHIVE/${TODAY}.md"
 
 # copy text from working file to archive file
-cp "${DIR}/TODAY.md" "${archiveFile}"
+mkdir -p "${DIR}/ARCHIVE" && cp "${DIR}/TODAY.md" "${DIR}/ARCHIVE/${TODAY}.md"
 
-echo "Archived today's work into ${archiveFile}" >> $logFile
+echo "Archived today's work." >> "${logFile}"
 
 # Sync text from working file to 750words.com
 # NODEDIR=$(which node)
 NODEDIR="/usr/local/bin/node"
-$NODEDIR ${DIR}/uploadText.js
-echo "ran ${NODEDIR} ${DIR}/uploadText.js" >> $logFile
+$NODEDIR "${DIR}/uploadText.js"
+echo "ran '${NODEDIR}' '${DIR}/uploadText.js'" >> "${logFile}"
 # WARNING: this assumes the node script succeeded!
-echo "Sync'd today's work to 750words.com" >> $logFile
+echo "Sync'd today's work to 750words.com" >> "${logFile}"
 
 # If current day is different the last sync date
 if [ "$lastSyncDate" != "$TODAY" ]; then
   # clears today's file
-  echo "Cleared today's file ${NOW}" >> $logFile
+  echo "Cleared today's file '${NOW}'" >> "${logFile}"
   > "${DIR}/TODAY.md"
 fi
 
 # update last sync time/date in file
 updateSyncFile
 
-echo "" >> $logFile
+echo "" >> "${logFile}"
 
