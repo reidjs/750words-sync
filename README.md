@@ -1,5 +1,5 @@
 # 750Words Sync
-Automate archiving and uploading text to 750words.com. 
+Automate archiving and uploading text to 750words.com. This tool is not affiliated with the site.
 
 ## SETUP
 ### 1. Download
